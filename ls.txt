@@ -1,0 +1,14 @@
+To limit a feature of your Next.js web app to pro users, you can use **LemonSqueezy** to implement a subscription model. You can follow the steps outlined in this [tutorial](https://dev.to/developeratul/how-to-implement-subscription-model-using-lemonsqueezy-in-nextjs-134-stable-app-router-27cd) to get started.
+
+You can also use **Supabase** to manage user authentication and authorization. You can check out this [quickstart guide](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs) to learn how to use Supabase with Next.js.
+
+Once you have set up your subscription model and user authentication, you can use conditional rendering in your Next.js app to limit access to certain features to pro users only. You can check out this [example](https://docs-git-docs-add-next-js-server-component-docs-supabase.vercel.app/docs/guides/with-nextjs) to learn how to implement conditional rendering in Next.js.
+
+I hope this helps! Let me know if you have any other questions.
+
+Source: Conversation with Bing, 12/19/2023
+(1) How to implement subscription model using LemonSqueezy in Next.js (13.4 .... https://dev.to/developeratul/how-to-implement-subscription-model-using-lemonsqueezy-in-nextjs-134-stable-app-router-27cd.
+(2) Quickstart: Next.js | Supabase. https://docs-git-docs-add-next-js-server-component-docs-supabase.vercel.app/docs/guides/with-nextjs.
+(3) Use Supabase with Next.js | Supabase Docs. https://supabase.com/docs/guides/getting-started/quickstarts/nextjs.
+(4) lmsqueezy/nextjs-billing: A Next.js billing app with Lemon Squeezy - GitHub. https://github.com/lmsqueezy/nextjs-billing.
+(5) Integrate Payments with Next.js 13 App Dir & Lemon Squeezy - Felix Vemmer. https://www.felixvemmer.com/blog/lemon-squeezy-nextjs-payment-integration-guide.
