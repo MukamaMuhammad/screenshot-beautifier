@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { FaGoogle } from "react-icons/fa";
 import { Button } from "@components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,7 @@ const page = () => {
   const [password, setPassword] = useState("");
   const [signInError, setSignInError] = useState("");
   const router = useRouter();
-  const supabaseClient = useSupabaseClient();
+  const supabase = createClientComponentClient();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -34,17 +34,16 @@ const page = () => {
 
     try {
       // sign in a user
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
       });
-      console.log(data);
 
       if (error) {
         console.error("Error signing in:", error.message);
         setSignInError(`Error signing in: ${error.message}`);
       } else {
-        console.log("User signed in successfully:", data);
+        console.log("User signed in successfully:");
         router.push("/landing");
         // Redirect or perform other actions after successful registration
       }

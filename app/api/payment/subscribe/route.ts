@@ -1,19 +1,30 @@
+// import type { CreateCheckoutResult } from "lemonsqueezy.ts/dist/modules/types";
+
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import axios from "axios";
+import { axios } from "@lib/axios";
 import { ls } from "../../../../lib/lemons";
-import { supabaseClient } from "@app/utils/supabase";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
-export async function POST(request) {
+export type CreateCheckoutResponse = {
+  checkoutURL: string;
+};
+
+export async function POST(request: Request) {
   try {
-    const { userId } = await request.json();
+    const { userId, userEmail, variantNumber } = await request.json();
+    console.log(userId, userEmail);
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    const { data: user } = await supabaseClient
-      .from("profile")
-      .select("id, email")
-      .eq("id", userId)
-      .single();
+    // const { data: user } = await supabase
+    //   .from("profile")
+    //   .select("id, email")
+    //   .eq("id", userId)
+    //   .single();
+    // console.log(user);
 
-    if (!user)
+    if (!userId)
       return NextResponse.json(
         { message: "Your account was not found" },
         { status: 404 }
@@ -23,7 +34,7 @@ export async function POST(request) {
       await ls.listAllVariants({
         productId: process.env.LEMONS_SQUEEZY_PRODUCT_ID,
       })
-    ).data[0];
+    ).data[variantNumber];
 
     const checkout = await axios.post(
       "https://api.lemonsqueezy.com/v1/checkouts",
@@ -31,7 +42,11 @@ export async function POST(request) {
         data: {
           type: "checkouts",
           attributes: {
-            checkout_data: { email: user.email, custom: [user.id] },
+            product_options: {
+              enabled_variants: [variant.id],
+            },
+
+            checkout_data: { email: userEmail, custom: [userId] },
           },
           relationships: {
             store: {
@@ -47,11 +62,12 @@ export async function POST(request) {
         },
       }
     );
+    // as CreateCheckoutResult;
     return NextResponse.json(
       { checkoutURL: checkout.data.attributes.url },
       { status: 201 }
     );
-  } catch (err) {
+  } catch (err: any) {
     return NextResponse.json({ message: err.message || err }, { status: 500 });
   }
 }

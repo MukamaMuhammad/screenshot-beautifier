@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { supabaseClient } from "@app/utils/supabase";
 import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
@@ -21,6 +22,7 @@ const page = () => {
   const [cpassword, setCPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [registrationError, setRegistrationError] = useState("");
+  const supabase = createClientComponentClient();
   const router = useRouter();
 
   const handleEmailChange = (e) => {
@@ -45,7 +47,7 @@ const page = () => {
     }
 
     async function isEmailAlreadyRegistered(email) {
-      const { data, error } = await supabaseClient
+      const { data, error } = await supabase
         .from("profile")
         .select("id")
         .eq("email", email);
@@ -64,11 +66,11 @@ const page = () => {
         return;
       }
       // Register a new user
-      const { user, error } = await supabaseClient.auth.signUp({
+      const { user, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: "/landing",
+          emailRedirectTo: `${location.origin}/auth/callback`,
         },
       });
 
@@ -78,8 +80,6 @@ const page = () => {
       } else {
         console.log("User registered successfully:", user);
         router.push("/auth/welcome");
-        const { data: authData } = await supabaseClient.auth.getUser();
-        console.log(authData);
         // Redirect or perform other actions after successful registration
       }
     } catch (error) {

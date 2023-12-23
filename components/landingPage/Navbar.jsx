@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
@@ -7,6 +8,11 @@ import { Button } from "@components/ui/button";
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+  const supabase = createClientComponentClient();
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
+  };
 
   return (
     <div className="inset-0 bg-transparent ">
@@ -22,7 +28,7 @@ const Navbar = () => {
           </Link>
           <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {isLoggedIn ? (
-              <Button>Log Out</Button>
+              <Button onClick={handleSignOut}>Log Out</Button>
             ) : (
               <div className="flex gap-3">
                 <Button
