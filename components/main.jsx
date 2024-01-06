@@ -1213,7 +1213,7 @@ export default function Main(props) {
                   />
                 </div>
                 {isWatermark && (
-                  <div className="text-[12px] text-white absolute bottom-[4px]">
+                  <div className="text-[10px] text-white absolute bottom-[4px]">
                     <p className="drop-shadow-lg">Created by shotune.com</p>
                   </div>
                 )}
