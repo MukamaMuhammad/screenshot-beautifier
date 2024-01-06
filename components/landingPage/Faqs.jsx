@@ -8,7 +8,10 @@ import {
 
 const Faqs = () => {
   return (
-    <div className="container mx-auto px-5 py-10 flex flex-col items-center">
+    <div
+      className="container mx-auto px-5 py-10 flex flex-col items-center"
+      id="faqs"
+    >
       <h2 class="mb-3">FAQs</h2>
       <Accordion type="single" collapsible className="w-[100%] md:w-[50%]">
         <AccordionItem value="item-1">

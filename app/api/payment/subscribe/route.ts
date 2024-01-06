@@ -13,16 +13,9 @@ export type CreateCheckoutResponse = {
 export async function POST(request: Request) {
   try {
     const { userId, userEmail, variantNumber } = await request.json();
-    console.log(userId, userEmail);
+
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
-    // const { data: user } = await supabase
-    //   .from("profile")
-    //   .select("id, email")
-    //   .eq("id", userId)
-    //   .single();
-    // console.log(user);
 
     if (!userId)
       return NextResponse.json(

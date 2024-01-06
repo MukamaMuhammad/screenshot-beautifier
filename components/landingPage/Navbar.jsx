@@ -3,10 +3,23 @@ import React, { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser, useSession } from "@supabase/auth-helpers-react";
+import logo2 from "@public/images/logo2.JPG";
+import { IoMenu } from "react-icons/io5";
+import Image from "next/image";
 import { Button } from "@components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const session = useSession();
+  console.log(session);
   const router = useRouter();
   const supabase = createClientComponentClient();
   const handleSignOut = async () => {
@@ -22,18 +35,19 @@ const Navbar = () => {
             href="/"
             class="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <span class="self-center text-2xl font-semibold whitespace-nowrap ">
+            <Image class=" rounded h-7 w-8" alt="logo" src={logo2} />
+            <span class="self-center text-2xl max-md:text-xl font-semibold whitespace-nowrap ">
               Shotune
             </span>
           </Link>
-          <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            {isLoggedIn ? (
+          <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            {session ? (
               <Button onClick={handleSignOut}>Log Out</Button>
             ) : (
               <div className="flex gap-3">
                 <Button
                   variant="secondary"
-                  className="max-md:hidden"
+                  className=""
                   onClick={() => router.push("/auth/signin")}
                 >
                   Sign In
@@ -43,31 +57,28 @@ const Navbar = () => {
                 </Button>
               </div>
             )}
-
-            <button
-              data-collapse-toggle="navbar-sticky"
-              type="button"
-              class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden  focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400  dark:focus:ring-gray-600"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Open main menu</span>
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 14"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
-              </svg>
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="inline-flex items-center p-2 w-12 h-12 justify-center text-sm text-gray-500 rounded-lg md:hidden  dark:text-gray-400 focus:outline-none ">
+                <IoMenu className="w-12 h-12" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <a href={"/"}>Home</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href={"/#features"}>Features</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href={"/#pricing"}>Pricing</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href={"/#faqs"}>Faqs</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={"/billings"}>Billings</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div
             class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
@@ -75,34 +86,37 @@ const Navbar = () => {
           >
             <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border  rounded-lg  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  ">
               <li>
-                <a
-                  href="#"
-                  class="block py-2 px-3   rounded md:bg-transparent  md:p-0 "
-                  aria-current="page"
+                <Link
+                  href="/#features"
+                  class="block py-2 px-3  rounded md:bg-transparent md:p-0 "
                 >
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" class="block py-2 px-3  rounded    md:p-0    ">
+                <Link
+                  href="/#pricing"
+                  class="block py-2 px-3  rounded    md:p-0    "
+                >
                   Pricing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" class="block py-2 px-3  rounded    md:p-0    ">
+                <Link
+                  href="/#faqs"
+                  class="block py-2 px-3  rounded    md:p-0    "
+                >
                   Faqs
-                </a>
+                </Link>
               </li>
-              <li>
-                <a href="#" class="block py-2 px-3  rounded    md:p-0    ">
-                  Contact
-                </a>
-              </li>
-              {isLoggedIn && (
+              {session && (
                 <li>
-                  <a href="#" class="block py-2 px-3  rounded    md:p-0    ">
-                    Subscriptions
-                  </a>
+                  <Link
+                    href={"/billings"}
+                    class="block py-2 px-3  rounded    md:p-0    "
+                  >
+                    Billings
+                  </Link>
                 </li>
               )}
             </ul>

@@ -44,7 +44,8 @@ const page = () => {
         setSignInError(`Error signing in: ${error.message}`);
       } else {
         console.log("User signed in successfully:");
-        router.push("/landing");
+        router.push("/");
+        router.refresh();
         // Redirect or perform other actions after successful registration
       }
     } catch (error) {
@@ -94,11 +95,24 @@ const page = () => {
         </CardContent>
         <CardFooter className="w-[100%] flex flex-col gap-3 mt-[-8px]">
           <p className="text-[12px]">OR</p>
-          <Button className="w-[100%]">
+          <Button
+            className="w-[100%]"
+            onClick={() =>
+              supabase.auth.signInWithOAuth({
+                provider: "google",
+              })
+            }
+          >
             <span className="mr-2">
               <FaGoogle />
             </span>
             Sign In With Google
+          </Button>
+          <Button
+            className="w-[100%]"
+            onClick={() => router.push("/auth/signup")}
+          >
+            Create an account
           </Button>
         </CardFooter>
       </Card>

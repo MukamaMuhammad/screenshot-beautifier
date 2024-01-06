@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@components/ui/button";
 import img1 from "@public/images/img1.webp";
+import HeroImage from "@public/images/hero.png";
 
 const Hero = () => {
   return (
@@ -17,9 +18,9 @@ const Hero = () => {
             Screenshots
           </h1>
           <p class="mb-8 leading-relaxed">
-            Shotune is the ultimate screenshot tool that lets you customize,
-            annotate, and share your snaps with ease. No need to install
-            anything, just use your browser.
+            Shotune is the ultimate online tool for creating stunning and
+            professional screenshots. No need to install anything, just use your
+            browser.
           </p>
           <div>
             <Button className="text-[16px]">Create for free!</Button>
@@ -29,7 +30,7 @@ const Hero = () => {
           <Image
             class="object-cover object-center rounded"
             alt="hero"
-            src={img1}
+            src={HeroImage}
           />
           {/* <img
             class="object-cover object-center rounded"

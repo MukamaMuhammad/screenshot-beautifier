@@ -4,36 +4,39 @@ import { Button } from "@components/ui/button";
 import { axios } from "@lib/axios";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CreateCheckoutResponse } from "@app/api/payment/subscribe/route";
+import { useRouter } from "next/navigation";
 
 const Pricing = () => {
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   const goToCheckoutForMonthly = async () => {
-    console.log("I was clicked");
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(user?.id);
 
-    try {
-      const response = await fetch("/api/payment/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          userEmail: user?.email,
-          variantNumber: 1,
-        }),
-      });
-      const { checkoutURL } = await response.json();
-      console.log(checkoutURL);
-      window.location.href = checkoutURL;
-    } catch (err) {
-      //
-      console.log(`This is the pricing page error: ${err}`);
+    if (!user) {
+      router.push("/auth/signin");
+    } else {
+      try {
+        const response = await fetch("/api/payment/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user?.id,
+            userEmail: user?.email,
+            variantNumber: 1,
+          }),
+        });
+        const { checkoutURL } = await response.json();
+        console.log(checkoutURL);
+        window.location.href = checkoutURL;
+      } catch (err) {
+        //
+        console.log(`This is the pricing page error: ${err}`);
+      }
     }
   };
 
@@ -43,37 +46,40 @@ const Pricing = () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(user?.id);
 
-    try {
-      const response = await fetch("/api/payment/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          userEmail: user?.email,
-          variantNumber: 2,
-        }),
-      });
-      const { checkoutURL } = await response.json();
-      console.log(checkoutURL);
-      window.location.href = checkoutURL;
-    } catch (err) {
-      //
-      console.log(`This is the pricing page error: ${err}`);
+    if (!user) {
+      router.push("/auth/signin");
+    } else {
+      try {
+        const response = await fetch("/api/payment/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user?.id,
+            userEmail: user?.email,
+            variantNumber: 2,
+          }),
+        });
+        const { checkoutURL } = await response.json();
+        console.log(checkoutURL);
+        window.location.href = checkoutURL;
+      } catch (err) {
+        //
+        console.log(`This is the pricing page error: ${err}`);
+      }
     }
   };
 
   return (
-    <section className="overflow-hidden">
+    <section className="overflow-hidden" id="pricing">
       <div className="container px-5 py-10 mx-auto">
         <div className="flex flex-col text-center w-full mb-20">
           <h2 className="mb-3">Pricing</h2>
           <p className="lg:w-2/3 mx-auto leading-relaxed ">
             Get unlimited access to Shotune editor, save unlimited snaps and
-            remove the watermark and more advanced features.
+            remove watermark and more advanced features.
           </p>
         </div>
         <div className="flex justify-center flex-wrap -m-4 ">
@@ -101,7 +107,7 @@ const Pricing = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Edit and save up to 5 snaps
+                  Edit and save up to 5 snaps per month
                 </p>
                 <p className="flex items-center  mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center   rounded-full flex-shrink-0">
@@ -137,7 +143,9 @@ const Pricing = () => {
                 </p>
               </div>
               <div>
-                <Button className="w-[100%]">Create Now</Button>
+                <Button className="w-[100%]" onClick={() => router.push("/")}>
+                  Create Now
+                </Button>
 
                 <p className="text-xs  mt-3">
                   Almost all the Shotune features are available to all users for

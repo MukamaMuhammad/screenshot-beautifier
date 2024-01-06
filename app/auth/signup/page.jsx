@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { supabaseClient } from "@app/utils/supabase";
 import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
 import { Button } from "@components/ui/button";
@@ -92,9 +91,10 @@ const page = () => {
     <div className="h-[100vh] container px-5  mx-auto flex items-center justify-center">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle className="text-center">Welcome to Snapster!</CardTitle>
-          <CardDescription className="text-center" s>
-            Sign up to Supasnap for free. No credit card required.
+          <CardTitle className="text-center">Welcome to Shotune!</CardTitle>
+          <CardDescription className="text-center">
+            Sign up to Shotune and start designing for free. No credit card
+            required.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,11 +140,18 @@ const page = () => {
         </CardContent>
         <CardFooter className="w-[100%] flex flex-col gap-2 mt-[-8px]">
           <p className="text-[12px]">OR</p>
-          <Button className="w-[100%]">
+          <Button
+            className="w-[100%]"
+            onClick={() =>
+              supabase.auth.signInWithOAuth({
+                provider: "google",
+              })
+            }
+          >
             <span className="mr-2">
               <FaGoogle />
             </span>
-            Sign Up With Google
+            Sign in With Google
           </Button>
         </CardFooter>
       </Card>

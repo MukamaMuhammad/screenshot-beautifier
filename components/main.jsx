@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
-import Navbar from "./landingPage/Navbar";
 import { Button } from "@components/ui/button";
 import domtoimage from "dom-to-image";
 import toast from "react-hot-toast";
@@ -9,22 +8,43 @@ import { FiSave } from "react-icons/fi";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { IoIosArrowDown } from "react-icons/io";
-import { GrPowerReset } from "react-icons/gr";
 import { BiReset } from "react-icons/bi";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { FaRegClipboard } from "react-icons/fa";
 import { FaPaste } from "react-icons/fa";
-import { CiTwitter } from "react-icons/ci";
-import { FaGithub } from "react-icons/fa";
+import { MdOutlineArrowDropDown } from "react-icons/md";
 import { CgColorPicker } from "react-icons/cg";
-import { FiCoffee } from "react-icons/fi";
+import { TiLockClosed } from "react-icons/ti";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useSession } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const isValidHexColor = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
 
-export default function Main() {
+export default function Main(props) {
+  const router = useRouter();
+  const { toast: toast2 } = useToast();
   const wrapperRef = useRef();
+  const isPro = props.isPro;
+
+  // const [isPro, setIsPro] = useState(false);
+  const [isWatermark, setIsWatermark] = useState(true);
   const [blob, setBlob] = useState({ src: null, w: 0, h: 0 });
+  const [zoomLevel, setZoomLevel] = useState(50);
+  const [OuterZoomLevel, setOuterZoomLevel] = useState(50);
   const [bgPicker, setBGPicker] = useState(false);
   const [options, setOptions] = useState({
     aspectRatio: "aspect-auto",
@@ -33,7 +53,7 @@ export default function Main() {
       colorStart: "#ff40ff",
       colorEnd: "#fec700",
     },
-    padding: "40px",
+    padding: "50px",
     rounded: "10px",
     position: "",
     roundedWrapper: "10px",
@@ -41,6 +61,12 @@ export default function Main() {
     noise: false,
     browserBar: "hidden",
   });
+
+  // Function to handle zoom out
+  const handleZoomChange = (e) => {
+    const selectedZoom = parseInt(e.target.value, 10);
+    setOuterZoomLevel(selectedZoom);
+  };
 
   const handleRoundedWrapperChange = (value) => {
     const newRoundedWrapper = `${value}px`;
@@ -152,13 +178,193 @@ export default function Main() {
           .then(async (data) => {
             var a = document.createElement("A");
             a.href = data;
-            a.download = `pika-${new Date().toISOString()}.png`;
+            a.download = `shotune-${new Date().toISOString()}.png`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             toast.success("Image exported!", { id: savingToast });
           });
       });
+  };
+
+  const saveAsSVG = async () => {
+    if (!isPro) {
+      toast2({
+        description: "Ungrade to Pro to use this feature!",
+        action: (
+          <ToastAction
+            altText="Upgrade"
+            onClick={() => router.push("/landing#pricing")}
+          >
+            Get Started
+          </ToastAction>
+        ),
+      });
+      return;
+    }
+
+    if (!blob?.src) {
+      toast.error("Nothing to save, make sure to add a screenshot first!");
+      return;
+    }
+    if (window.pirsch) {
+      pirsch("🎉 SVG saved");
+    }
+    let savingToast = toast.loading("Exporting SVG...");
+    const scale = window.devicePixelRatio;
+    domtoimage
+      .toSvg(wrapperRef.current, {
+        height: wrapperRef.current.offsetHeight * scale,
+        width: wrapperRef.current.offsetWidth * scale,
+        style: {
+          transform: "scale(" + scale + ")",
+          transformOrigin: "top left",
+          width: wrapperRef.current.offsetWidth + "px",
+          height: wrapperRef.current.offsetHeight + "px",
+        },
+      })
+      .then(async (dataUrl) => {
+        var a = document.createElement("A");
+        a.href = dataUrl;
+        a.download = `shotune-${new Date().toISOString()}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("SVG exported!", { id: savingToast });
+      })
+      .catch((error) => {
+        console.error("Error exporting SVG:", error);
+        toast.error("Error exporting SVG", { id: savingToast });
+      });
+  };
+
+  const saveImageAsWebP = async () => {
+    if (!isPro) {
+      toast2({
+        description: "Ungrade to Pro to use this feature!",
+        action: (
+          <ToastAction
+            altText="Upgrade"
+            onClick={() => router.push("/landing#pricing")}
+          >
+            Get Started
+          </ToastAction>
+        ),
+      });
+      return;
+    }
+
+    if (!blob?.src) {
+      toast.error("Nothing to save, make sure to add a screenshot first!");
+      return;
+    }
+    if (window.pirsch) {
+      pirsch("🎉 Screenshot saved as WebP");
+    }
+    let savingToast = toast.loading("Exporting image as WebP...");
+    const scale = window.devicePixelRatio;
+    domtoimage
+      .toPng(wrapperRef.current, {
+        height: wrapperRef.current.offsetHeight * scale,
+        width: wrapperRef.current.offsetWidth * scale,
+        style: {
+          transform: "scale(" + scale + ")",
+          transformOrigin: "top left",
+          width: wrapperRef.current.offsetWidth + "px",
+          height: wrapperRef.current.offsetHeight + "px",
+        },
+      })
+      .then(async (data) => {
+        const webpData = await convertToWebP(data);
+        var a = document.createElement("A");
+        a.href = webpData;
+        a.download = `shotune-${new Date().toISOString()}.webp`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Image exported as WebP!", { id: savingToast });
+      });
+  };
+
+  const convertToWebP = async (pngData) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = pngData;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          resolve(URL.createObjectURL(blob));
+        }, "image/webp");
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const saveAsJPG = () => {
+    if (!blob?.src) {
+      toast.error("Nothing to save, make sure to add a screenshot first!");
+      return;
+    }
+    if (window.pirsch) {
+      pirsch("🎉 Screenshot saved as JPG");
+    }
+    let savingToast = toast.loading("Exporting as JPG...");
+
+    const scale = window.devicePixelRatio;
+    const canvas = document.createElement("canvas");
+    canvas.width = wrapperRef.current.offsetWidth * scale;
+    canvas.height = wrapperRef.current.offsetHeight * scale;
+    const ctx = canvas.getContext("2d");
+
+    ctx.scale(scale, scale);
+
+    domtoimage
+      .toPng(wrapperRef.current, {
+        height: wrapperRef.current.offsetHeight,
+        width: wrapperRef.current.offsetWidth,
+        style: {
+          width: wrapperRef.current.offsetWidth + "px",
+          height: wrapperRef.current.offsetHeight + "px",
+        },
+      })
+      .then((dataUrl) => {
+        const img = new Image();
+        img.src = dataUrl;
+
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const jpgData = canvas.toDataURL("image/jpeg");
+          const blob = dataURItoBlob(jpgData);
+
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `shotune-${new Date().toISOString()}.jpg`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+
+          toast.success("JPG exported!", { id: savingToast });
+        };
+      });
+  };
+
+  const dataURItoBlob = (dataURI) => {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
   };
 
   const copyImage = () => {
@@ -205,9 +411,7 @@ export default function Main() {
             let data = [new ClipboardItem({ [type]: blob })];
             navigator.clipboard
               .write(data)
-              .then(() => {
-                // Success
-              })
+              .then(() => toast.success("Image copied to clipboard"))
               .catch((err) => {
                 // Error
                 console.error("Error:", err);
@@ -394,16 +598,16 @@ export default function Main() {
 
   const renderOptions = () => {
     return (
-      <div className="sticky top-0 flex items-center ">
+      <div className=" top-0 flex items-center">
         <div
           className={classnames(
             "h-auto  rounded-2xl ring-1 ring-primary dark:ring-primary    shadow-lg    w-full relative  mt-10 lg:mt-0"
           )}
         >
-          <div className="absolute inset-0 w-full lg:h-[75vh]   lg:scale-y-[1.05] scale-100 lg:scale-x-[1.1] dark:lg:scale-[1.05] lg:max-h-[calc(100vh-60px)] transform-gpu opacity-60" />
-          <ScrollArea className="md:h-[60vh] h-[40vh] lg:px-6 px-3 py-2">
+          <div className="absolute inset-0 w-full lg:h-[70vh] lg:scale-y-[1.05] scale-100 lg:scale-x-[1.1] dark:lg:scale-[1.05] lg:max-h-[calc(100vh-60px)] transform-gpu opacity-60" />
+          <ScrollArea className="md:h-[60vh] h-[50vh] lg:px-6 px-3 py-2">
             <div className="relative flex flex-row flex-wrap items-start justify-start space-y-5 lg:items-start lg:flex-col lg:space-y-4 gap-2 m-1">
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-between w-full mb-[-15px]">
                 <div className="text-sm font-semibold dark:text-white">
                   Aspect Ratio
                 </div>
@@ -421,12 +625,87 @@ export default function Main() {
                     <option value="aspect-video">16/9</option>
                     <option value="aspect-[3/2]">3/2</option>
                   </select>
-                  <IoIosArrowDown className="absolute top-[25%] right-[10%] transform pointer-events-none text-black w-4 h-4" />
+                  <MdOutlineArrowDropDown className="absolute top-[12%] right-[5%] transform pointer-events-none text-black w-6 h-6" />
                 </div>
+              </div>
+              <div className="">
+                <Popover>
+                  <PopoverTrigger className="bg-primary rounded-sm">
+                    <div className="text-sm px-3 mb-[3px]">more</div>
+                  </PopoverTrigger>
+                  <PopoverContent className="grid grid-cols-2 gap-2">
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[16/9]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      Twitter Post
+                    </div>
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[4/5]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      Insta Post
+                    </div>
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[9/16]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      Insta Story
+                    </div>
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[400/209]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      LinkedIn Post
+                    </div>
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[40/21]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      Facebook Post
+                    </div>
+                    <div
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          aspectRatio: "aspect-[16/9]",
+                        })
+                      }
+                      className="border-black border-2 rounded-sm px-1 text-center text-sm cursor-pointer hover:border-primary active:border-primary active:bg-primary active:text-white"
+                    >
+                      YouTube
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="flex items-center justify-between w-full">
                 <div className="text-sm font-semibold dark:text-white">
-                  Browser Wrapper
+                  Browser Mockup
                 </div>
                 <div className="relative">
                   <select
@@ -440,12 +719,12 @@ export default function Main() {
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
                   </select>
-                  <IoIosArrowDown className="absolute top-[25%] right-[10%] transform pointer-events-none text-black w-4 h-4" />
+                  <MdOutlineArrowDropDown className="absolute top-[12%] right-[5%] transform pointer-events-none text-black w-6 h-6" />
                 </div>
               </div>
               <div className="flex items-center justify-between w-full">
                 <div className="text-sm font-semibold dark:text-white">
-                  Padding
+                  Image Size
                 </div>
                 <div>
                   <div className="w-[100%] flex gap-2 items-center">
@@ -456,7 +735,8 @@ export default function Main() {
                       <Slider
                         onValueChange={handlePaddingChange}
                         value={[parseInt(options.padding.match(/\d+/), 10)]}
-                        max={80}
+                        max={130}
+                        min={25}
                         step={1}
                         className="w-[100%]"
                       />
@@ -511,7 +791,7 @@ export default function Main() {
               </div>
               <div className="flex items-center justify-between w-full">
                 <div className="text-sm font-semibold dark:text-white">
-                  Wrapper Rounded Corners
+                  Background roundness
                 </div>
                 <div></div>
                 <div className="flex gap-2 items-center">
@@ -533,7 +813,7 @@ export default function Main() {
               </div>
               <div className="flex items-center justify-between w-full">
                 <div className="text-sm font-semibold dark:text-white">
-                  Screenshot Rounded Corners
+                  Screenshot Roundness
                 </div>
                 <div className="flex gap-2 items-center">
                   <div className="text-[12px] text-white bg-black px-1 rounded">
@@ -568,7 +848,7 @@ export default function Main() {
                     <option value="pb-0 pl-0">Bottom left</option>
                     <option value="pb-0 pr-0">Bottom right</option>
                   </select>
-                  <IoIosArrowDown className="absolute top-[25%] right-[10%] transform pointer-events-none text-black w-4 h-4" />
+                  <MdOutlineArrowDropDown className="absolute top-[12%] right-[5%] transform pointer-events-none text-black w-6 h-6" />
                 </div>
               </div>
               <div className="flex items-center justify-between w-full">
@@ -589,7 +869,7 @@ export default function Main() {
                     <option value="shadow-2xl">Large</option>
                     <option value="shadow-inner">Inner</option>
                   </select>
-                  <IoIosArrowDown className="absolute top-[25%] right-[10%] transform pointer-events-none text-black w-4 h-4" />
+                  <MdOutlineArrowDropDown className="absolute top-[12%] right-[5%] transform pointer-events-none text-black w-6 h-6" />
                 </div>
               </div>
               <div className="flex items-center justify-between w-full">
@@ -606,6 +886,35 @@ export default function Main() {
                   />
                 </div>
               </div>
+              <div className="flex items-center justify-between w-full">
+                <div className="text-sm font-semibold dark:text-white flex">
+                  {!isPro && <TiLockClosed className="w-5 h-5 mr-1" />}
+                  Watermark
+                </div>
+                <div>
+                  <Switch
+                    id="checkbox"
+                    checked={isWatermark}
+                    onCheckedChange={(e) => {
+                      if (!isPro) {
+                        toast2({
+                          description: "Ungrade to Pro to use this feature!",
+                          action: (
+                            <ToastAction
+                              altText="Upgrade"
+                              onClick={() => router.push("/#pricing")}
+                            >
+                              Get Started
+                            </ToastAction>
+                          ),
+                        });
+                        return;
+                      }
+                      setIsWatermark((prev) => !prev);
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </ScrollArea>
           <div className="sticky flex flex-col gap-3 items-center justify-between w-full lg:px-6 px-3 py-3">
@@ -613,19 +922,56 @@ export default function Main() {
               <Button onClick={copyImage} className="flex gap-1">
                 <FaRegClipboard /> Copy
               </Button>
-              <Button onClick={saveImage} className="flex gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center focus:outline-none">
+                  Export{" "}
+                  <MdOutlineArrowDropDown className=" pointer-events-none text-white w-6 h-6 mt-[2px]" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onClick={saveImage}
+                    className="cursor-pointer"
+                  >
+                    PNG
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={saveAsJPG}
+                    className="cursor-pointer"
+                  >
+                    JPG
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={saveImageAsWebP}
+                    className="cursor-pointer"
+                  >
+                    {!isPro && <TiLockClosed className="w-5 h-5 mr-1" />}
+                    WEBP
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={saveAsSVG}
+                    className="cursor-pointer"
+                  >
+                    {!isPro && <TiLockClosed className="w-5 h-5 mr-1" />}
+                    SVG
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {/* <Button onClick={saveImage} className="flex gap-1">
                 <FiSave /> Save
-              </Button>
+              </Button> */}
               <Button onClick={() => setBlob({})} className="flex gap-1">
                 <BiReset /> Reset
               </Button>
             </div>
             <Button
-              onClick={saveImage}
+              onClick={() => toast("This feature is coming soon")}
               variant="secondary"
               className="flex gap-1 w-full"
             >
-              <MdOutlineSaveAlt /> Export
+              <FiSave /> Save
             </Button>
           </div>
         </div>
@@ -660,23 +1006,23 @@ export default function Main() {
         return (
           <div
             className={
-              "flex items-center w-full px-4 py-[10px] rounded-t-lg bg-white/80"
+              "flex items-center w-full px-4 py-[10px] max-md:py-[3px] rounded-t-lg bg-white/80"
             }
           >
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-400 rounded-full" />
-              <div className="w-3 h-3 bg-yellow-300 rounded-full" />
-              <div className="w-3 h-3 bg-green-500 rounded-full" />
+            <div className="flex items-center space-x-2 max-md:space-x-1">
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-red-400 rounded-full" />
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-yellow-300 rounded-full" />
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-green-500 rounded-full" />
             </div>
           </div>
         );
       case "dark":
         return (
-          <div className="flex items-center w-full px-4 py-[10px] rounded-t-lg bg-black/40">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-400 rounded-full" />
-              <div className="w-3 h-3 bg-yellow-300 rounded-full" />
-              <div className="w-3 h-3 bg-green-500 rounded-full" />
+          <div className="flex items-center w-full px-4 py-[10px] max-md:py-[3px] rounded-t-lg bg-black/40">
+            <div className="flex items-center space-x-2 max-md:space-x-1">
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-red-400 rounded-full" />
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-yellow-300 rounded-full" />
+              <div className="w-3 h-3 max-md:w-1 max-md:h-1 bg-green-500 rounded-full" />
             </div>
           </div>
         );
@@ -687,7 +1033,7 @@ export default function Main() {
 
   return (
     <div
-      className="relative flex flex-col h-screen px-5 lg:px-10 "
+      className="flex flex-col lg:h-screen h-auto px-5 lg:px-10 "
       onPaste={onPaste}
       onDragOver={(e) => e.preventDefault()}
       onDragEnter={(e) => e.preventDefault()}
@@ -697,148 +1043,186 @@ export default function Main() {
         onPaste(e);
       }}
     >
-      <Navbar />
-      <div className="relative flex flex-col-reverse w-full lg:flex-row-reverse max-w-[1600px] mx-auto">
-        <div className="w-full lg:w-[350px] md:absolute md:top-0 md:left-0">
+      <div className="flex gap-2 py-2 items-center justify-end">
+        <div className="text-sm font-semibold dark:text-white">Zoom</div>
+        <div className="relative">
+          <select
+            placeholder="Zoom"
+            value={OuterZoomLevel}
+            className=" px-2 py-1  rounded-lg shadow-lg appearance-none cursor-pointer text-black text-[14px] focus:outline-none  focus:ring-0 w-20 "
+            onChange={handleZoomChange}
+          >
+            <option value="25">25%</option>
+            <option value="50">50%</option>
+            <option value="75">75%</option>
+            <option value="100">100%</option>
+            <option value="150">150%</option>
+            <option value="200">200%</option>
+          </select>
+          <MdOutlineArrowDropDown className="absolute top-[12%] right-[5%] transform pointer-events-none text-black w-6 h-6" />
+        </div>
+      </div>
+
+      <div className="relative flex  flex-col-reverse w-full lg:flex-row-reverse max-w-[1600px] mx-auto">
+        <div className="w-full lg:w-[340px] lg:absolute lg:top-0 lg:left-0">
           {renderOptions()}
         </div>
-        <div className="md:absolute md:top-0 md:left-350px w-full lg:w-[calc(100%-350px)] py-5 lg:p-10 lg:pl-0 flex flex-col-reverse lg:flex-col items-center justify-center overflow-y-auto">
+        <div className="lg:absolute lg:top-0 lg:left-350px w-full lg:h-[80vh] h-[50vh] rounded-lg lg:w-[calc(100%-350px)]  flex flex-col items-center justify-center overflow-auto ring-1 ring-opacity-20 ring-primary">
           {blob?.src ? (
-            <>
+            <div
+              style={
+                {
+                  // transform: `scale(${OuterZoomLevel / 100}) translate(0%, 0%)`,
+                }
+              }
+              className={`relative overflow-auto shadow-xl duration-200 ease-in-out my-5 w-full h-full  flex items-center justify-center`}
+            >
               <div
-                className={`overflow-hidden shadow-xl duration-200 ease-in-out relative my-5`}
+                ref={(el) => (wrapperRef.current = el)}
+                style={{
+                  ...(options?.customTheme
+                    ? {
+                        transform: `scale(${
+                          OuterZoomLevel / 100
+                        }) translate(0%, 0%)`,
+                        borderRadius: `${options?.roundedWrapper}`,
+
+                        // padding: options?.position
+                        //   ? ""
+                        //   : `${options?.padding}`,
+
+                        // padding: "",
+                        // paddingTop: "0px",
+
+                        background: `linear-gradient(45deg, ${
+                          options?.customTheme?.colorStart || "transparent"
+                        }, ${options?.customTheme?.colorEnd || "transparent"})`,
+                      }
+                    : {
+                        // padding: options?.position ? "" : `${options?.padding}`,
+                        transform: `scale(${
+                          OuterZoomLevel / 100
+                        }) translate(0%, 0%)`,
+
+                        borderRadius: `${options?.roundedWrapper}`,
+                      }),
+                  ...(options?.position && options?.position === "pt-0 pr-0"
+                    ? {
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: options.padding,
+                        paddingBottom: options.padding,
+                      }
+                    : {}),
+                  ...(options?.position && options?.position === "pl-0 pt-0"
+                    ? {
+                        paddingTop: "0px",
+                        paddingRight: options.padding,
+                        paddingLeft: "0px",
+                        paddingBottom: options.padding,
+                      }
+                    : {}),
+                  ...(options?.position && options?.position === "pb-0 pl-0"
+                    ? {
+                        paddingTop: options.padding,
+                        paddingRight: options.padding,
+                        paddingLeft: "0px",
+                        paddingBottom: "0px",
+                      }
+                    : {}),
+                  ...(options?.position && options?.position === "pb-0 pr-0"
+                    ? {
+                        paddingTop: options.padding,
+                        paddingRight: "0px",
+                        paddingLeft: options.padding,
+                        paddingBottom: "0px",
+                      }
+                    : {}),
+                }}
+                className={classnames(
+                  "transition-all duration-200 relative ease-in-out flex items-center justify-center overflow-hidden flex-col",
+                  options?.aspectRatio,
+                  options?.position,
+                  { [options?.theme]: !options.customTheme }
+                )}
               >
                 <div
-                  ref={(el) => (wrapperRef.current = el)}
                   style={{
-                    ...(options?.customTheme
-                      ? {
-                          borderRadius: `${options?.roundedWrapper}`,
-                          padding: options?.position
-                            ? ""
-                            : `${options?.padding}`,
-
-                          // padding: "",
-                          // paddingTop: "0px",
-
-                          background: `linear-gradient(45deg, ${
-                            options?.customTheme?.colorStart || "transparent"
-                          }, ${
-                            options?.customTheme?.colorEnd || "transparent"
-                          })`,
-                        }
-                      : {
-                          padding: options?.position
-                            ? ""
-                            : `${options?.padding}`,
-                          borderRadius: `${options?.roundedWrapper}`,
-                        }),
-                    ...(options?.position && options?.position === "pt-0 pr-0"
-                      ? {
-                          paddingTop: "0px",
-                          paddingRight: "0px",
-                          paddingLeft: options.padding,
-                          paddingBottom: options.padding,
-                        }
-                      : {}),
-                    ...(options?.position && options?.position === "pl-0 pt-0"
-                      ? {
-                          paddingTop: "0px",
-                          paddingRight: options.padding,
-                          paddingLeft: "0px",
-                          paddingBottom: options.padding,
-                        }
-                      : {}),
-                    ...(options?.position && options?.position === "pb-0 pl-0"
-                      ? {
-                          paddingTop: options.padding,
-                          paddingRight: options.padding,
-                          paddingLeft: "0px",
-                          paddingBottom: "0px",
-                        }
-                      : {}),
-                    ...(options?.position && options?.position === "pb-0 pr-0"
-                      ? {
-                          paddingTop: options.padding,
-                          paddingRight: "0px",
-                          paddingLeft: options.padding,
-                          paddingBottom: "0px",
-                        }
-                      : {}),
+                    transform: `scale(${
+                      parseInt(options.padding.match(/\d+/), 10) / 100
+                    }) translate(0%, 0%)`,
                   }}
-                  className={classnames(
-                    "transition-all duration-200 relative ease-in-out flex items-center justify-center overflow-hidden max-w-[80vw] flex-col",
-                    options?.aspectRatio,
-                    options?.position,
-                    { [options?.theme]: !options.customTheme }
-                  )}
+                  className=""
                 >
-                  <div className="">
-                    {renderBrowserBar()}
-                    {options?.noise ? (
-                      <div
-                        style={
-                          options.browserBar !== "hidden"
-                            ? {
-                                backgroundImage: `url("/noise.svg")`,
-                                borderTopRightRadius: "0px",
-                                borderTopLeftRadius: "0px",
-                              }
-                            : {
-                                backgroundImage: `url("/noise.svg")`,
-                              }
-                        }
-                        className={`absolute inset-0 w-full h-full bg-repeat opacity-[0.15]`}
-                      />
-                    ) : (
-                      ""
-                    )}
-                    <img
-                      src={blob?.src}
-                      style={{
-                        ...(blob?.w
+                  {renderBrowserBar()}
+                  {options?.noise ? (
+                    <div
+                      style={
+                        options.browserBar !== "hidden"
                           ? {
-                              width: blob?.w / window.devicePixelRatio + "px",
-                            }
-                          : {}),
-                        ...(options.browserBar !== "hidden"
-                          ? {
-                              borderTopRightRadius: blob?.w ? "0px" : "0px",
-                              borderTopLeftRadius: blob?.w ? "0px" : "0px",
-                              borderBottomLeftRadius: blob?.w
-                                ? options?.rounded
-                                : options?.rounded,
-                              borderBottomRightRadius: blob?.w
-                                ? options?.rounded
-                                : options?.rounded,
+                              backgroundImage: `url("/noise.svg")`,
+                              borderTopRightRadius: "0px",
+                              borderTopLeftRadius: "0px",
                             }
                           : {
-                              borderRadius: blob?.w
-                                ? options?.rounded
-                                : options?.rounded,
-                            }),
-                      }}
-                      className={`relative z-10s transition-all duration-200 ease-in-out object-cover ${
-                        options?.shadow
-                      } ${getImageRadius()} ${
-                        options?.browserBar == "hidden" ? "" : "rounded-t-none"
-                      }`}
-                      onLoad={(e) => {
-                        setBlob({
-                          ...blob,
-                          w: e.target.naturalWidth,
-                          h: e.target.naturalHeight,
-                        });
-                      }}
+                              backgroundImage: `url("/noise.svg")`,
+                            }
+                      }
+                      className={`absolute inset-0 w-full h-full bg-repeat opacity-[0.15]`}
                     />
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  <img
+                    src={blob?.src}
+                    style={{
+                      ...(blob?.w
+                        ? {
+                            width: blob?.w / window.devicePixelRatio + "px",
+                          }
+                        : {}),
+                      ...(options.browserBar !== "hidden"
+                        ? {
+                            borderTopRightRadius: blob?.w ? "0px" : "0px",
+                            borderTopLeftRadius: blob?.w ? "0px" : "0px",
+                            borderBottomLeftRadius: blob?.w
+                              ? options?.rounded
+                              : options?.rounded,
+                            borderBottomRightRadius: blob?.w
+                              ? options?.rounded
+                              : options?.rounded,
+                          }
+                        : {
+                            borderRadius: blob?.w
+                              ? options?.rounded
+                              : options?.rounded,
+                          }),
+                    }}
+                    className={`relative z-10s transition-all duration-200 ease-in-out object-cover ${
+                      options?.shadow
+                    }  ${getImageRadius()} ${
+                      options?.browserBar == "hidden" ? "" : "rounded-t-none"
+                    }`}
+                    onLoad={(e) => {
+                      setBlob({
+                        ...blob,
+                        w: e.target.naturalWidth,
+                        h: e.target.naturalHeight,
+                      });
+                    }}
+                  />
                 </div>
+                {isWatermark && (
+                  <div className="text-[12px] text-white absolute bottom-[4px]">
+                    <p className="drop-shadow-lg">Created by shotune.com</p>
+                  </div>
+                )}
               </div>
-            </>
+            </div>
           ) : (
-            <div className="flex items-center justify-center min-h-[50vh] lg:min-h-[80vh]">
+            <div className="flex items-center justify-center h-full">
               <label
-                className="flex flex-col items-center justify-center text-lg opacity-30 select-none max-w-[550px] rounded-2xl p-10 mt-20 text-center dark:text-white cursor-pointer border-2 border-dashed border-gray-400 hover:opacity-50 duration-300"
+                className="flex flex-col items-center justify-center text-lg opacity-30 select-none max-w-[550px] max-lg:mx-3 rounded-2xl p-10 text-center dark:text-white cursor-pointer border-2 border-dashed border-gray-400 hover:opacity-50 duration-300"
                 htmlFor="imagesUpload"
               >
                 <input
