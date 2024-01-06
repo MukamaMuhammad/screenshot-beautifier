@@ -66,16 +66,16 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <a href={"/"}>Home</a>
+                  <Link href={"/"}>Home</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <a href={"/#features"}>Features</a>
+                  <Link href={"/#features"}>Features</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <a href={"/#pricing"}>Pricing</a>
+                  <Link href={"/#pricing"}>Pricing</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <a href={"/#faqs"}>Faqs</a>
+                  <Link href={"/#faqs"}>Faqs</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href={"/billings"}>Billings</Link>

@@ -164,7 +164,7 @@ const Pricing = () => {
                   PRO
                 </h2>
                 <h1 className="text-5xl  leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-                  <span>$4.99</span>
+                  <span>$5</span>
                   <span className="text-lg ml-1 font-normal ">/mo</span>
                 </h1>
 
@@ -250,7 +250,7 @@ const Pricing = () => {
                   LIFETIME
                 </h2>
                 <h1 className="text-5xl  leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-                  <span>$39.99</span>
+                  <span>$39</span>
                 </h1>
 
                 <p className="flex items-center  mb-2">
