@@ -44,7 +44,7 @@ const Navbar = () => {
             {session ? (
               <Button onClick={handleSignOut}>Log Out</Button>
             ) : (
-              <div className="flex gap-3">
+              <div className="flex md:gap-3 gap-1">
                 <Button
                   variant="secondary"
                   className=""
@@ -52,13 +52,16 @@ const Navbar = () => {
                 >
                   Sign In
                 </Button>
-                <Button onClick={() => router.push("/auth/signup")}>
+                <Button
+                  className="max-md:hidden"
+                  onClick={() => router.push("/auth/signup")}
+                >
                   Sign Up
                 </Button>
               </div>
             )}
             <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex items-center p-2 w-12 h-12 justify-center text-sm text-gray-500 rounded-lg md:hidden  dark:text-gray-400 focus:outline-none ">
+              <DropdownMenuTrigger className="inline-flex items-center p-2 w-12 h-12 justify-center text-sm text-gray-500 rounded-lg md:hidden  dark:text-gray-400 ml-0">
                 <IoMenu className="w-12 h-12" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -77,6 +80,16 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <Link href={"/billings"}>Billings</Link>
                 </DropdownMenuItem>
+                {!session && (
+                  <DropdownMenuItem>
+                    <Button
+                      className=""
+                      onClick={() => router.push("/auth/signup")}
+                    >
+                      Sign Up
+                    </Button>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -312,45 +312,31 @@ export default function Main(props) {
       return;
     }
     if (window.pirsch) {
-      pirsch("🎉 Screenshot saved as JPG");
+      pirsch("🎉 Screenshot saved");
     }
-    let savingToast = toast.loading("Exporting as JPG...");
-
+    let savingToast = toast.loading("Exporting image...");
     const scale = window.devicePixelRatio;
-    const canvas = document.createElement("canvas");
-    canvas.width = wrapperRef.current.offsetWidth * scale;
-    canvas.height = wrapperRef.current.offsetHeight * scale;
-    const ctx = canvas.getContext("2d");
-
-    ctx.scale(scale, scale);
 
     domtoimage
-      .toPng(wrapperRef.current, {
-        height: wrapperRef.current.offsetHeight,
-        width: wrapperRef.current.offsetWidth,
+      .toJpeg(wrapperRef.current, {
+        quality: 0.95, // Adjust the quality as needed (0.0 to 1.0)
+        height: wrapperRef.current.offsetHeight * scale,
+        width: wrapperRef.current.offsetWidth * scale,
         style: {
+          transform: "scale(" + scale + ")",
+          transformOrigin: "top left",
           width: wrapperRef.current.offsetWidth + "px",
           height: wrapperRef.current.offsetHeight + "px",
         },
       })
-      .then((dataUrl) => {
-        const img = new Image();
-        img.src = dataUrl;
-
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const jpgData = canvas.toDataURL("image/jpeg");
-          const blob = dataURItoBlob(jpgData);
-
-          var a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = `shotune-${new Date().toISOString()}.jpg`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-
-          toast.success("JPG exported!", { id: savingToast });
-        };
+      .then(async (dataUrl) => {
+        var a = document.createElement("A");
+        a.href = dataUrl;
+        a.download = `shotune-${new Date().toISOString()}.jpeg`; // Use .jpeg extension
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Image exported!", { id: savingToast });
       });
   };
 
@@ -1213,7 +1199,7 @@ export default function Main(props) {
                   />
                 </div>
                 {isWatermark && (
-                  <div className="text-[10px] text-white absolute bottom-[4px]">
+                  <div className="md:text-[12px] text-[10px] text-white absolute bottom-[4px]">
                     <p className="drop-shadow-lg">Created by shotune.com</p>
                   </div>
                 )}
