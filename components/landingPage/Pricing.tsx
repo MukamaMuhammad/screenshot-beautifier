@@ -83,7 +83,7 @@ const Pricing = () => {
           </p>
         </div>
         <div className="flex justify-center flex-wrap -m-4 ">
-          <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
+          <div className="p-4 lg:w-1/4 md:w-1/2 w-full">
             <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col justify-between relative overflow-hidden">
               <div>
                 <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
