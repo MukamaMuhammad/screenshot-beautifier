@@ -8,8 +8,10 @@ import Footer from "@components/landingPage/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Hiring Ugandan",
-  description: "Find Your Next Job Here",
+  title:
+    "Shotune || Online screenshot editor and Screenshot Background Generator",
+  description:
+    "Shotune is the ultimate online tool for creating stunning and beautiful screenshots and app mockups. No need to install anything, just use your browser. Customize screenshot backgrounds, margins, roundings, borders and more with Shotune. Export in various formats and share your snaps instantly. Try it for free",
 };
 
 export default function RootLayout({ children }) {
