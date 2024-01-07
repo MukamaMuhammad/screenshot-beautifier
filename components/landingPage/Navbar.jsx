@@ -4,7 +4,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser, useSession } from "@supabase/auth-helpers-react";
-import logo2 from "@public/images/logo2.JPG";
+import logo2 from "@public/images/logo2.jpg";
 import { IoMenu } from "react-icons/io5";
 import Image from "next/image";
 import { Button } from "@components/ui/button";
