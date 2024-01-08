@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@lemonsqueezy/lemonsqueezy.js": "^1.2.4",
+    "@netlify/plugin-nextjs": "^4.41.3",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
