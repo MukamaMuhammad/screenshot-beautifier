@@ -214,7 +214,7 @@ const Pricing = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  No Shotune watermarks
+                  No Shotune watermark
                 </p>
                 <p className="flex items-center  mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center   rounded-full flex-shrink-0">
@@ -238,7 +238,7 @@ const Pricing = () => {
                   Buy Now
                 </Button>
                 <p className="text-xs  mt-3">
-                  Special Launch offer for the first 50 customers (20 left)
+                  Special 20% off Launch offer for the first 50 customers
                 </p>
               </div>
             </div>
@@ -299,7 +299,7 @@ const Pricing = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  No Shotune watermarks
+                  No Shotune watermark
                 </p>
                 <p className="flex items-center  mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center   rounded-full flex-shrink-0">
