@@ -62,7 +62,7 @@ const Faqs = () => {
           </AccordionTrigger>
           <AccordionContent className="text-start">
             Absolutely! Our support team is here to assist you. You can reach
-            out to us through out email Shotune@gmail.com
+            out to us through out email shotune.com@gmail.com
           </AccordionContent>
         </AccordionItem>
       </Accordion>
