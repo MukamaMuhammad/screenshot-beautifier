@@ -5,6 +5,7 @@ import { Toaster as Toaster2 } from "@/components/ui/toaster";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@components/landingPage/Navbar";
 import Footer from "@components/landingPage/Footer";
+import Head from "next/head";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -17,6 +18,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <Head>
+        <script
+          defer
+          data-domain="shotune.com"
+          src="https://plausible.io/js/script.js"
+        ></script>
+      </Head>
+
       <body>
         <Toaster />
         <Toaster2 />

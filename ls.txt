@@ -12,3 +12,4 @@ Source: Conversation with Bing, 12/19/2023
 (3) Use Supabase with Next.js | Supabase Docs. https://supabase.com/docs/guides/getting-started/quickstarts/nextjs.
 (4) lmsqueezy/nextjs-billing: A Next.js billing app with Lemon Squeezy - GitHub. https://github.com/lmsqueezy/nextjs-billing.
 (5) Integrate Payments with Next.js 13 App Dir & Lemon Squeezy - Felix Vemmer. https://www.felixvemmer.com/blog/lemon-squeezy-nextjs-payment-integration-guide.
+
