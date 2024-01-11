@@ -9,11 +9,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ProtectedRoute from "@components/ProtectedRouters/ProtectedRoute";
 
-// const { data: role, error } = await supabase.from("profile").select("role");
-
-const page = () => {
+const Create = () => {
   const supabase = createClientComponentClient();
-  // console.log(role);
 
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
@@ -113,4 +110,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Create;
