@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRouter = ({ children }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient();
@@ -42,4 +42,4 @@ const ProtectedRoute = ({ children }) => {
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default ProtectedRouter;

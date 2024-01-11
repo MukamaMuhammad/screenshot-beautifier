@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-// import ProtectedRoute from "@components/ProtectedRouters/ProtectedRoute";
+import ProtectedRouter from "@components/ProtectedRouters/ProtectedRoute";
 
-const Create = () => {
+const page = () => {
   const supabase = createClientComponentClient();
 
   const [title, setTitle] = useState("");
@@ -62,7 +62,7 @@ const Create = () => {
   };
 
   return (
-    <ProtectedRoute>
+    <ProtectedRouter>
       <section className="container md:px-5 py-10 mx-auto  ">
         <div className="lg:px-40">
           <form onSubmit={handleFormSubmit} className="flex flex-col gap-5 ">
@@ -106,47 +106,8 @@ const Create = () => {
           </form>
         </div>
       </section>
-    </ProtectedRoute>
+    </ProtectedRouter>
   );
 };
 
-export default Create;
-
-const ProtectedRoute = ({ children }) => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    const checkRole = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.replace("/auth/signin"); // Redirect to login if not authenticated
-      } else {
-        // Check the user's role in the Supabase profile table
-        const { data, error } = await supabase
-          .from("profile")
-          .select("role")
-          .eq("user_id", user.id)
-          .single();
-
-        if (error || !data || data.role !== "admin") {
-          router.replace("/"); // Redirect to unauthorized page if not an admin
-        } else {
-          setLoading(false);
-        }
-      }
-    };
-
-    checkRole();
-  }, [router]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return <>{children}</>;
-};
+export default page;
