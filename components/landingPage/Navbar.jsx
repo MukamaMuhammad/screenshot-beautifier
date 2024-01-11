@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useUser, useSession } from "@supabase/auth-helpers-react";
+import { useSession } from "@supabase/auth-helpers-react";
 import logo2 from "@public/images/logo2.jpg";
 import { IoMenu } from "react-icons/io5";
 import Image from "next/image";
@@ -19,9 +19,9 @@ import {
 
 const Navbar = () => {
   const session = useSession();
-  console.log(session);
   const router = useRouter();
   const supabase = createClientComponentClient();
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.refresh();
@@ -77,9 +77,11 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <Link href={"/#faqs"}>Faqs</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={"/billings"}>Billings</Link>
-                </DropdownMenuItem>
+                {session && (
+                  <DropdownMenuItem>
+                    <Link href={"/billings"}>Billings</Link>
+                  </DropdownMenuItem>
+                )}
                 {!session && (
                   <DropdownMenuItem>
                     <Button

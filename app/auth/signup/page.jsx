@@ -160,28 +160,3 @@ const page = () => {
 };
 
 export default page;
-
-const apiUrl = "https://api.lemonsqueezy.com/v1/products/152076";
-
-const fetchData = async () => {
-  try {
-    const response = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.LEMONSQUEEZY_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log("API Response:", data.data.attributes.store_id);
-  } catch (error) {
-    console.error("Error:", error.message);
-  }
-};
-
-fetchData();

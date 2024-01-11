@@ -52,7 +52,6 @@ export async function POST(request: Request) {
 
   switch (payload.meta.event_name) {
     case "order_created": {
-      console.log("Lifetime webhook ran");
       const LifetimePlan =
         payload.data.attributes.first_order_item.variant_name === "Lifetime";
 

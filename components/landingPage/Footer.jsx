@@ -33,6 +33,21 @@ const Footer = () => {
         </div>
 
         <div className="md:ml-3 flex flex-col justify-center  text-gray-500 text-sm max-md:mt-4 max-md:text-center">
+          <div className="text-gray-300 mb-2">LINKS</div>
+          <ul className="flex flex-col gap-2 ">
+            <li>
+              <Link href="/blog">Blog</Link>
+            </li>
+            <li>
+              <Link href="/">home</Link>
+            </li>
+            <li>
+              <Link href="/#editor">Editor</Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="md:ml-3 flex flex-col justify-center  text-gray-500 text-sm max-md:mt-4 max-md:text-center">
           <div className="text-gray-300 mb-2">LEGAL</div>
           <ul className="flex flex-col gap-2 ">
             <li>

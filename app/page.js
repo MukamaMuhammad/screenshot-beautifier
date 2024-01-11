@@ -23,7 +23,7 @@ const page = async () => {
   }
   return (
     <div>
-      <Main isPro={isPro} />
+      <Main isPro={isPro} id="editor" />
       <Hero />
       <Features />
       <Pricing />
