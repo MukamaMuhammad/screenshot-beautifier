@@ -24,6 +24,16 @@ export default function RootLayout({ children }) {
           data-domain="shotune.com"
           src="https://plausible.io/js/script.js"
         ></script>
+
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-YTFW9ZMX3W"
+        ></script>
+        <script>
+          window.dataLayer = window.dataLayer || []; function gtag()
+          {dataLayer.push(arguments)}
+          gtag('js', new Date()); gtag('config', 'G-YTFW9ZMX3W');
+        </script>
       </Head>
 
       <body>

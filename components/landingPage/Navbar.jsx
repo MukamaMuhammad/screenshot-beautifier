@@ -28,7 +28,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="inset-0 bg-transparent ">
+    <div className="inset-0 bg-transparent flex justify-center items-center bg-red-500">
       <nav class="w-full z-50 top-0 start-0 border-b-[1px] border-gray-200 bg-foreground/10 border-opacity-10">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link
