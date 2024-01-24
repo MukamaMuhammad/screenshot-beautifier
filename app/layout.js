@@ -5,8 +5,7 @@ import { Toaster as Toaster2 } from "@/components/ui/toaster";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@components/landingPage/Navbar";
 import Footer from "@components/landingPage/Footer";
-import Head from "next/head";
-import Script from "next/script";
+import GoogleAnalytics from "@components/GoogleAnalytics";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -18,25 +17,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Head>
-        <Script
-          strategy="lazyOnload"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_ANALYTICS}`}
-        />
-
-        <Script id="ga-script" strategy="lazyOnload">
-          {`
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${process.env.GOOGLE_ANALYTICS}', {
-      page_path: window.location.pathname,
-    });
-        `}
-        </Script>
-      </Head>
-
       <body>
+        {process.env.GOOGLE_ANALYTICS ? (
+          <GoogleAnalytics ga_id={process.env.GOOGLE_ANALYTICS} />
+        ) : null}
         <Toaster />
         <Toaster2 />
         <AuthProvider>
