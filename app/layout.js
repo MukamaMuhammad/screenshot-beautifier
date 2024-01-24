@@ -21,14 +21,18 @@ export default function RootLayout({ children }) {
       <Head>
         <Script
           strategy="lazyOnload"
-          async
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_ANALYTICS}`}
-        ></Script>
-        <Script strategy="lazyOnload">
-          window.dataLayer = window.dataLayer || []; function gtag()
-          {dataLayer.push(arguments)}
-          gtag('js', new Date()); gtag('config', `$
-          {process.env.GOOGLE_ANALYTICS}`);
+        />
+
+        <Script id="ga-script" strategy="lazyOnload">
+          {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${process.env.GOOGLE_ANALYTICS}', {
+      page_path: window.location.pathname,
+    });
+        `}
         </Script>
       </Head>
 
