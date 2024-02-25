@@ -190,7 +190,7 @@ export default function Main(props) {
   const saveAsSVG = async () => {
     if (!isPro) {
       toast2({
-        description: "Ungrade to Pro to use this feature!",
+        description: "Upgrade to Pro to use this feature!",
         action: (
           <ToastAction
             altText="Upgrade"
@@ -241,7 +241,7 @@ export default function Main(props) {
   const saveImageAsWebP = async () => {
     if (!isPro) {
       toast2({
-        description: "Ungrade to Pro to use this feature!",
+        description: "Upgrade to Pro to use this feature!",
         action: (
           <ToastAction
             altText="Upgrade"
@@ -587,7 +587,7 @@ export default function Main(props) {
       <div className=" top-0 flex items-center">
         <div
           className={classnames(
-            "h-auto  rounded-2xl ring-1 ring-primary dark:ring-primary    shadow-lg    w-full relative  mt-10 lg:mt-0"
+            "h-auto lg:h-[80vh]  rounded-2xl ring-1 ring-primary dark:ring-primary    shadow-lg    w-full relative  mt-10 lg:mt-0"
           )}
         >
           <div className="absolute inset-0 w-full lg:h-[70vh] lg:scale-y-[1.05] scale-100 lg:scale-x-[1.1] dark:lg:scale-[1.05] lg:max-h-[calc(100vh-60px)] transform-gpu opacity-60" />
@@ -884,7 +884,7 @@ export default function Main(props) {
                     onCheckedChange={(e) => {
                       if (!isPro) {
                         toast2({
-                          description: "Ungrade to Pro to use this feature!",
+                          description: "Upgrade to Pro to use this feature!",
                           action: (
                             <ToastAction
                               altText="Upgrade"

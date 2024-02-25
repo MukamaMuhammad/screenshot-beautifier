@@ -5,6 +5,7 @@ import { Toaster as Toaster2 } from "@/components/ui/toaster";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@components/landingPage/Navbar";
 import Footer from "@components/landingPage/Footer";
+
 import GoogleAnalytics from "@components/GoogleAnalytics";
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,0 +1,27 @@
+{
+    "name": "Screenshot.rocks - Create Browser Mockups",
+    "short_name": "Screenshot.rocks",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#a090c1",
+    "background_color": "#a090c1",
+    "display": "standalone",
+    "start_url": "https://screenshot.rocks?start=pwa",
+    "share_target": {
+        "action": "/",
+        "method": "GET",
+        "params": {
+          "text": "text"
+        }
+      }
+}
