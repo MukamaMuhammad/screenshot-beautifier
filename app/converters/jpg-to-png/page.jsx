@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import sharp from "sharp";
 
-const ImageConverter = () => {
+const page = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState("JPEG");
   const [downloadLinks, setDownloadLinks] = useState([]);
@@ -94,4 +94,4 @@ const ImageConverter = () => {
   );
 };
 
-export default ImageConverter;
+export default page;
