@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { getUserSubscriptionPlan } from "@lib/subscription";
-import Billings from "@components/Billings/Billings";
+// import Billings from "@components/Billings/Billings";
+import Billings from "@components/Billings/Billings2";
+// import { ls } from "@lib/lemons";
+import { getBillings } from "@lib/getBillings";
 import {
   Card,
   CardContent,
@@ -29,8 +32,13 @@ const ManageSubscription = async () => {
       data: { user },
     } = await supabase.auth.getUser();
     const userId: any = user?.id;
-    const { isCanceled, isPro, normalDateString, updatePaymentMethodURL } =
-      await getUserSubscriptionPlan(userId);
+    // const { isCanceled, isPro, normalDateString, updatePaymentMethodURL } =
+    //   await getUserSubscriptionPlan(userId);
+
+    // const billingUrl = await getBillings(userId);
+    // console.log(billingUrl);
+
+    const billingUrl = "";
     return (
       <div className="h-[80vh] container px-5 py-10 mx-auto flex items-center justify-center">
         <Card className="w-[350px]">
@@ -39,16 +47,17 @@ const ManageSubscription = async () => {
               <h2>Billings</h2>
             </CardTitle>
             <CardDescription className="text-center">
-              Here is your billing Information
+              Click the button down to manage your subscriptions
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Billings
-              userId={userId}
-              isCanceled={isCanceled}
-              isPro={isPro}
-              normalDateString={normalDateString}
-              updatePaymentMethodURL={updatePaymentMethodURL}
+              billingUrl={billingUrl}
+              // userId={userId}
+              // isCanceled={isCanceled}
+              // isPro={isPro}
+              // normalDateString={normalDateString}
+              // updatePaymentMethodURL={updatePaymentMethodURL}
             />
           </CardContent>
         </Card>
